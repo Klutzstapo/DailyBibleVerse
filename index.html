@@ -13,60 +13,47 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
             text-align: center;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
         }
-        .container {
-            padding: 20px;
-            border: 1px solid #ccc;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        h1 {
+            margin: 0;
+            padding: 10px;
         }
-        .daily-verse-label {
-            font-size: 20px;
-            margin-bottom: 10px;
-            font-weight: bold;
+        #date-time {
+            font-size: 1.5em;
+            margin-top: 10px;
         }
-        .datetime {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .verse {
-            font-size: 18px;
-            color: #555;
+        #bible-verse {
+            margin-top: 20px;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="daily-verse-label">Daily Bible Verse</div>
-        <div id="datetime" class="datetime"></div>
-        <div class="verse" id="bible-verse">Loading Bible verse...</div>
+    <div>
+        <h1>Daily Bible Verse</h1>
+        <div id="date-time"></div>
+        <div id="bible-verse"></div>
     </div>
 
     <script>
-        // Function to update the date (day, month, year) only
         function updateDateTime() {
             const now = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const dateTimeString = now.toLocaleDateString('en-US', options);
-            document.getElementById('datetime').textContent = dateTimeString;
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('date-time').textContent = `${day}/${month}/${year}`;
         }
 
-        // Function to set the background image
-        function setBackground() {
-            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            const imageUrl = `https://source.unsplash.com/daily?sig=${today}`;
-            document.body.style.backgroundImage = `url(${imageUrl})`;
-        }
-
-        // List of Bible verses
-        const verses = [
-            [
-    "Genesis 1:1 - In the beginning God created the heaven and the earth.",
+        function updateBibleVerse() {
+            // List of 365 Bible verses (replace with your actual list)
+            const bibleVerses = [
+                "John 3:16 - For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+                "Psalm 23:1 - The Lord is my shepherd; I shall not want.",
+                "Romans 8:28 - And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+                "Genesis 1:1 - In the beginning God created the heaven and the earth.",
     "Exodus 14:14 - The Lord shall fight for you, and ye shall hold your peace.",
     "Psalm 23:1 - The Lord is my shepherd; I shall not want.",
     "Psalm 46:1 - God is our refuge and strength, a very present help in trouble.",
@@ -233,29 +220,24 @@
     "1 Peter 1:3 - Blessed be the God and Father of our Lord Jesus Christ, which according to his abundant mercy hath begotten us again unto a lively hope by the resurrection of Jesus Christ from the dead,",
     "1 John 1:9 - If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.",
     "Jude 1:24 - Now unto him that is able to keep you from falling, and to present you faultless before the presence of his glory with exceeding joy,",
-    "Revelation 21:4 - And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
-        ];
-
-        // Function to fetch and display the daily Bible verse from a static list
-        function fetchBibleVerse() {
-            try {
-                // Calculate index based on date
-                const today = new Date();
-                const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-                const verseIndex = dayOfYear % verses.length;
-                document.getElementById('bible-verse').textContent = verses[verseIndex];
-            } catch (error) {
-                document.getElementById('bible-verse').textContent = 'Error loading Bible verse.';
-                console.error('Error fetching Bible verse:', error);
-            }
+    "Revelation 21:4 - And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away."
+            ];
+            
+            const now = new Date();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            
+            // Ensure we stay within the bounds of the verses array
+            const verseIndex = dayOfYear % bibleVerses.length;
+            const verse = bibleVerses[verseIndex];
+            
+            document.getElementById('bible-verse').textContent = verse;
         }
 
-        // Set the background image and date-time immediately
-        setBackground();
         updateDateTime();
+        updateBibleVerse();
 
-        // Fetch and display the Bible verse when the page loads
-        fetchBibleVerse();
+        // Update date and time display every day at midnight
+        setInterval(updateDateTime, 86400000); // 24 hours in milliseconds
     </script>
 </body>
 </html>
