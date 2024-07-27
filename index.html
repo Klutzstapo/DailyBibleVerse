@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date and Bible Verse</title>
+    <title>Daily Bible Verse</title>
     <style>
         body {
             display: flex;
@@ -44,13 +44,8 @@
     <div class="container">
         <div class="daily-verse-label">Daily Bible Verse</div>
         <div id="datetime" class="datetime"></div>
-        <div class="verse">
-            <!-- The Bible verse from the external script will be displayed here -->
-        </div>
+        <div class="verse" id="bible-verse">Loading Bible verse...</div>
     </div>
-
-    <!-- Include the external script to display the Bible verse -->
-    <script src="http://www.verse-a-day.com/js/KJV.js"></script>
 
     <script>
         // Function to update the date (day, month, year) only
@@ -68,9 +63,34 @@
             document.body.style.backgroundImage = `url(${imageUrl})`;
         }
 
+        // List of Bible verses
+        const verses = [
+            "John 3:16 - For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
+            "Psalm 23:1 - The Lord is my shepherd, I lack nothing.",
+            "Romans 8:28 - And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",
+            // Add more verses as needed
+        ];
+
+        // Function to fetch and display the daily Bible verse from a static list
+        function fetchBibleVerse() {
+            try {
+                // Calculate index based on date
+                const today = new Date();
+                const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+                const verseIndex = dayOfYear % verses.length;
+                document.getElementById('bible-verse').textContent = verses[verseIndex];
+            } catch (error) {
+                document.getElementById('bible-verse').textContent = 'Error loading Bible verse.';
+                console.error('Error fetching Bible verse:', error);
+            }
+        }
+
         // Set the background image and date-time immediately
         setBackground();
         updateDateTime();
+
+        // Fetch and display the Bible verse when the page loads
+        fetchBibleVerse();
     </script>
 </body>
 </html>
