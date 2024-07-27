@@ -5,55 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Bible Verse</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --background-color: #f0f0f0;
+            --text-color: #000;
+            --container-bg: #fff;
+            --button-bg: #007BFF;
+            --button-hover-bg: #0056b3;
+            --button-text-color: #fff;
+        }
+        [data-theme="dark"] {
+            --background-color: #1a1a1a;
+            --text-color: #fff;
+            --container-bg: #333;
+            --button-bg: #444;
+            --button-hover-bg: #222;
+            --button-text-color: #fff;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
         .container {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 90%;
+            padding: 20px;
+            background-color: var(--container-bg);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
         h1 {
-            margin-bottom: 10px;
-        }
-        h2 {
             margin-bottom: 20px;
-            color: #555;
         }
         p {
             font-size: 1.2em;
-            margin: 0;
+        }
+        .read-more, .toggle-mode {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--button-bg);
+            color: var(--button-text-color);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .read-more:hover, .toggle-mode:hover {
+            background-color: var(--button-hover-bg);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Daily Bible Verse</h1>
-        <h2 id="date"></h2>
-        <p id="verse">Loading...</p>
+        <p id="date"></p>
+        <p id="verse">...</p>
     </div>
+    <a href="https://www.biblegateway.com/" class="read-more" target="_blank">Read More</a>
+    <button class="toggle-mode" onclick="toggleTheme()">Toggle Light/Dark Mode</button>
 
     <script>
-        function getCurrentDate() {
-            const today = new Date();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            const year = today.getFullYear();
-            return `${month}-${day}-${year}`;
-        }
-
-        function getDailyVerse() {
-            const verses = [
- "In the beginning God created the heaven and the earth. - Genesis 1:1",
+        const verses = [
+    "In the beginning God created the heaven and the earth. - Genesis 1:1",
     "So God created man in his own image, in the image of God created he him; male and female created he them. - Genesis 1:27",
     "Therefore shall a man leave his father and his mother, and shall cleave unto his wife: and they shall be one flesh. - Genesis 2:24",
     "But as for you, ye thought evil against me; but God meant it unto good, to bring to pass, as it is this day, to save much people alive. - Genesis 50:20",
@@ -153,15 +172,25 @@
     "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. - Philippians 4:6",
     "For I am persuaded, that neither death, nor life, nor angels, nor principalities, nor powers, nor things present, nor things to come, Nor height, nor depth, nor any other creature, shall be able to separate us from the love of God, which is in Christ Jesus our Lord. - Romans 8:38-39",
     "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord. - Romans 6:23",
-    "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. - 2 Timothy 1:7"
-            ];
-            const index = new Date().getDate() % verses.length;
-            return verses[index];
-        }
+    "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind. - 2 Timothy 1:7",
+    "Let your conversation be without covetousness; and be content with such things as ye have: for he hath said, I will never leave thee, nor forsake thee. - Hebrews 13:5",
+    "The LORD is my shepherd; I shall not want. - Psalm 23:1",
+    "I can do all things through Christ which strengtheneth me. - Philippians 4:13",
+    "In the beginning was the Word, and the Word was with God, and the Word was God. - John 1:1"
+        ];
 
-        window.onload = function() {
-            document.getElementById('date').innerText = getCurrentDate();
-            document.getElementById('verse').innerText = getDailyVerse();
+        const today = new Date();
+        const dateStr = today.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' });
+        const verseIndex = today.getDay(); // Change this to `today.getDate() % verses.length` to cycle through all 365 verses
+        const verseStr = verses[verseIndex];
+
+        document.getElementById("date").innerText = dateStr;
+        document.getElementById("verse").innerText = verseStr;
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
         }
     </script>
 </body>
